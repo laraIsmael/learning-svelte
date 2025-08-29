@@ -1,34 +1,57 @@
 <script lang="ts">
-import Header from './Header.svelte'
-
-// Same name valiable and value shortcut:
-// if you create a variable with the same name as the $prop you can simplify the code and have it just passed once in parenteses like the example: {name}
-// the other way to do this is to set up the value on the html porsion: name={"Scott"}
-// both are correact one is just shorter
-let name = $state("Lara");
-
-// TypeScrip:
-// will infer its type if you don't specify. On name TS will have the type be string since we are passing a string
-// on status if we don't specify its type like we are doing here, the type would also be string since we want specifically "OPEN" | "CLOSE" we have to pass it as its shwon bellow.
-let status: "OPEN" | "CLOSE" = $state("OPEN");
-
-// The rune $derived will work as a connector to a $state. meaning, when the $state associated to the $derived value change so will it.
-// full_name is being displayed as a h2 bellow and it will updated when the user change the name on the input.
-// a good example of use for $derived would be a cart list, imagine you have an array storing products price and a $derived could be set to the total price (the sum of all vlaues in the array) if the $state array changes an item is added or removed the $derived total value will update as well. 
-let full_name = $derived(name + " " + "Ismael")
-
-// you can name the funcion the same as the tag and just pass the short version of it as the combo of the funcion onclick here and the line commented with **** down bellow is showing
-function onclick() {
-  status = status === "OPEN" ? "CLOSE" : "OPEN";
-}
-
+  import Header from "./Header.svelte";
+// create a $state object to store values nd keep it reactive as it changes.
+let formState = $state({
+  name: "",
+  birthday: "",
+  step: 0,
+  error: "",
+})
+// remember that TS will infer the type given the value passed.
 </script>
 
+<main>
+  <!-- test Header component: <Header name={formState.name} error={formState.error}/> -->
 
-<Header {name} />
-<h2>{full_name}</h2>
-<input type="text" bind:value={name} />
-<p>The store is {status}</p>
-<!-- **** <button {onclick}>Toggle Status</button> -->
- <!-- instead of the function on the script side and the code as above you can do what is showing bellow and have the function in line. adding js to the html portion of the code-->
- <button onclick={() => {status === "OPEN" ? "CLOSE" : "OPEN"}}>TOGGLE</button>
+  <!-- create a paragraph element that shows the text Step: and the value of the $state step. wanting to keep $state step index 0 so we can use in a loop later on, but waring to display the steps starting in 1 = just add 1 to the display value of the step on the DOM-->
+   <p>Step: {formState.step +1}</p>
+
+  <!-- create another if statement that checks if $state step is equal to 0
+      inside the if statement:
+      create a div with a label (for-name and its value is "Your name: ")and an input (type-text id-name and bind it to the $state name value)  -->
+  {#if formState.step === 0}
+    <div>
+      <label for="name">Your name: </label>
+      <input type="text" id="name" bind:value={formState.name}/>
+    </div>
+
+    <!-- create a button with a value of Next and an inline onclick callback thay checks if $state name is not empty => add 1 to step and set error to "" else => create an error message: "your name is empty. Please write your name."-->
+    <button onclick={() => {
+      if(formState.name !== "") {
+        formState.step +=1;
+        formState.error = "";
+      } else {
+        formState.error = "your name is empty. Please write your name.";
+      }
+    }}>
+      Next
+    </button>  
+     <!-- add an if else statement that show step one and has the same next button but the input is for the $state birthday instead  -->
+    {:else if formState.step === 1}
+      <label for="birthday">Your Birthday: </label>
+      <input type="date" bind:value={formState.birthday}/>
+
+      <button onclick={() => { 
+      if(formState.birthday !== "") {
+        formState.step +=1;
+        formState.error = "";
+      } else {
+        formState.error = "your birthday is empty. Please write your birthday.";
+      }}}>Next</button>
+  {/if}
+
+    <!-- create an if statement that only shows $state error if its value is truth => pass a paragraph with a class error and show $state error -->
+  {#if formState.error}
+    <p class="error">{formState.error}</p>
+  {/if}  
+</main>
