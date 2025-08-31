@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Header from "./Header.svelte";
+  // import Header from "./Header.svelte";
 // create a $state object to store values nd keep it reactive as it changes.
 let formState = $state({
   name: "",
@@ -8,6 +8,7 @@ let formState = $state({
   error: "",
 })
 // remember that TS will infer the type given the value passed.
+ 
 </script>
 
 <main>
