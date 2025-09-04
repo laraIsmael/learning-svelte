@@ -1,9 +1,15 @@
 <script lang="ts">
+  // importing snippet as the type of children, passing children as prop will give you access to the children passed inside the component on the file where its exported to the DOM
+  // on the HTML down below you use @render and pass children as a function.
+	import type { Snippet } from "svelte";
+
   let { 
+    children,
     name,
     error,
     optional_name = "Leo" 
   }: { 
+    children: Snippet,
     name: string,
     error: string,
     optional_name?: string 
@@ -17,6 +23,7 @@
   <h1>{name}'s Form'</h1>
 </div>
 <h2 class="test">{name.replaceAll('a', 'X')}</h2>
+{@render children()}
 <h2 class="error">{error}</h2>
 
 <style>
