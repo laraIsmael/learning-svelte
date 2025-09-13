@@ -5,11 +5,13 @@
 
   let { 
     children,
+    secondChild,
     name,
     error,
-    optional_name = "Leo" 
+    optional_name = "User" 
   }: { 
     children: Snippet,
+    secondChild: Snippet ,
     name: string,
     error: string,
     optional_name?: string 
@@ -19,11 +21,10 @@
 </script>
 
 <div>
-  <h3>{optional_name}</h3>
-  <h1>{name}'s Form'</h1>
+  <h1>{name || optional_name}'s Form'</h1>
 </div>
-<h2 class="test">{name.replaceAll('a', 'X')}</h2>
 {@render children()}
+<h3>{@render secondChild()}</h3>
 <h2 class="error">{error}</h2>
 
 <style>
@@ -34,9 +35,5 @@
 
   :global(.error) {
     color: red;
-  }
-
-  .test {
-    background: blue;
   }
 </style>
